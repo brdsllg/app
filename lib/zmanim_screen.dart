@@ -121,7 +121,7 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
         lat!, // latitude (negative = South)
         lng!, // longitude (negative = West, positive = East)
         now,
-        _currentAltitude ?? 0, // elevation
+        0, // elevation
       );
       location.setLocationName(_locationName ?? 'Current Location');
 
