@@ -148,11 +148,6 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
         return start.add(Duration(milliseconds: (shaahZmanisMs * hours).toInt()));
       }
 
-      DateTime? subtractTemporalHours(DateTime? start, double hours) {
-        if (start == null || shaahZmanisMs <= 0) return null;
-        return start.subtract(Duration(milliseconds: (shaahZmanisMs * hours).toInt()));
-      }
-
       final sunrise = calendar.getSunrise();
       final sunset = calendar.getSunset();
 

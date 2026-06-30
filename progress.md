@@ -1,19 +1,23 @@
 # Progress Summary
 
 ## Disclaimer First-Launch Feature
+- Implemented 3 sequential disclaimer dialogs (shared_preferences)
 
+## Baal Hatanya Native Implementation (2026-06-30)
 **What was changed:**
+1. **lib/zmanim_screen.dart** — Replaced manual `getSunriseOffsetByDegrees(90 + X)` calculations with native `kosher_dart` Baal Hatanya methods that match Chabad.org
+2. **REVERT_LOG_BAAL_HATANYA.md** — Created detailed revert log with old and new code
 
-1. **pubspec.yaml** — Added `shared_preferences: ^2.2.2` dependency
-2. **lib/first_launch_disclaimer.dart** (new file) — Service with 3 sequential, non-dismissible disclaimer dialogs:
-   - Page 1: Add 2 minutes l'chumrah (accuracy disclaimer)
-   - Page 2: Exact location permissions notice
-   - Page 3: Local shul minyanim variance notice
-   - Saves `disclaimers_accepted = true` after all 3 accepted
-   - Uses `PopScope(canPop: false)` to prevent accidental dismiss
-3. **lib/main.dart** — Added `_AppGate` StatefulWidget:
-   - Shows loading spinner on startup
-   - Calls `checkAndShowDisclaimers()` on first launch
-   - Only renders `ZmanimScreen()` after disclaimers are accepted (or were already accepted in a previous session)
+**Methods replaced:**
+- `getSunriseOffsetByDegrees(90 + 1.583)` → `getSunriseBaalHatanya()` / `getSunsetBaalHatanya()`
+- Manual shaah zmanis → `getShaahZmanisBaalHatanya()`
+- Manually calculated zmanim → `getAlosBaalHatanya()`, `getSofZmanShmaBaalHatanya()`, `getSofZmanTfilaBaalHatanya()`, `getMinchaGedolaBaalHatanya()`, `getMinchaKetanaBaalHatanya()`, `getPlagHaminchaBaalHatanya()`, `getTzaisBaalHatanya()`
 
-**Status:** `flutter analyze` — 0 issues. Ready to run on device.
+**New zmanim added:**
+- `getTzaisGeonim8Point5Degrees()` — 8.5° lechumra
+- `getSofZmanAchilasChametzBaalHatanya()` — 4 shaos (Erev Pesach relevant)
+- `getSofZmanBiurChametzBaalHatanya()` — 5 shaos (Erev Pesach relevant)
+
+**Revert:** `git checkout -- lib/zmanim_screen.dart`
+
+**Status:** Awaiting flutter analyze verification.
