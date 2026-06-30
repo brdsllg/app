@@ -3,8 +3,8 @@ import 'package:kosher_dart/kosher_dart.dart';
 
 void main() {
   // Coordinates: -37, 145 (latitude, longitude) — e.g. Melbourne area
-  final double latitude = -37;
-  final double longitude = 145;
+  final double latitude = -37.8663;
+  final double longitude = 145.0007;
   final String locationName = 'Lat: $latitude, Lng: $longitude';
 
   // One full year: July 1, 2026 → June 30, 2027
