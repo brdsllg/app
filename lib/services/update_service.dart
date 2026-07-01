@@ -54,6 +54,9 @@ class UpdateService {
         // Already checked today — use cached result
         final cachedBuild = prefs.getInt(_lastBuildKey);
         if (cachedBuild == null) return null;
+        final local = await PackageInfo.fromPlatform();
+        final localBuild = int.tryParse(local.buildNumber) ?? 0;
+        if (cachedBuild <= localBuild) return null;
         final cachedUrl = prefs.getString(_lastDownloadUrlKey) ?? '';
         return RemoteVersionInfo(
           version: '',
