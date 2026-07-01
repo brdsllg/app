@@ -154,7 +154,7 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
       // BAAL_HATANYA_NATIVE: All zmanim use native Baal Hatanya methods
       final zmanim = <String, Object?>{
         // BAAL_HATANYA_NATIVE: 16.9° - 72 min before netz amiti
-        ' test (Alot Hashachar)':
+        ' Dawn (Alot Hashachar)':
             calendar.getAlosBaalHatanya(),
 
         ' Earliest Tallit and Tefillin (Misheyakir)':
@@ -220,7 +220,7 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
       setState(() {
         _zmanim.addAll(zmanim);
         // BAAL_HATANYA_NATIVE: Shaah zmanis now from getShaahZmanisBaalHatanya()
-        _shaahZmanisDisplay = ' Shaah Zmanit (Baal Hatanya): $shaahMinutes min $shaahSeconds sec';
+        _shaahZmanisDisplay = ' Shaah Zmanit : $shaahMinutes min $shaahSeconds sec';
         _isLoading = false;
       });
     } catch (e) {
