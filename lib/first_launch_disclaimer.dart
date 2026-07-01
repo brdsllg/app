@@ -75,7 +75,7 @@ Future<void> _showDisclaimerPage(
           actions: [
             FilledButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('I Accept'),
+              child: const Text('OK'),
             ),
           ],
         ),
