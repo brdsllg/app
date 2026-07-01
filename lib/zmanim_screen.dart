@@ -154,7 +154,7 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
       // BAAL_HATANYA_NATIVE: All zmanim use native Baal Hatanya methods
       final zmanim = <String, Object?>{
         // BAAL_HATANYA_NATIVE: 16.9° - 72 min before netz amiti
-        ' Dawn (Alot Hashachar)':
+        ' test (Alot Hashachar)':
             calendar.getAlosBaalHatanya(),
 
         ' Earliest Tallit and Tefillin (Misheyakir)':
