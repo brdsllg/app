@@ -21,7 +21,7 @@ Future<bool> checkAndShowDisclaimers(BuildContext context) async {
         'clocks (even on smartphones); rounding; variations in halachic '
         'interpretations; and other factors.',
     1,
-    3,
+    2,
   );
 
   await _showDisclaimerPage(
@@ -31,17 +31,7 @@ Future<bool> checkAndShowDisclaimers(BuildContext context) async {
     'These zmanim use exact coordinates. Please ensure that you allow '
         'exact location permissions.',
     2,
-    3,
-  );
-
-  await _showDisclaimerPage(
-    // ignore: use_build_context_synchronously
-    navigator.context,
-    'Notice — Local Minyanim',
-    'Keep in mind that your local shul probably uses the city\'s zmanim, '
-        'and not exact coordinates, so minyanim times can be a minute or so off.',
-    3,
-    3,
+    2,
   );
 
   // All disclaimers accepted — persist
