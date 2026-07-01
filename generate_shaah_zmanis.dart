@@ -7,8 +7,8 @@ void main() {
   final String locationName = 'Lat: $latitude, Lng: $longitude';
 
   // Date range: July 1–31, 2026
-  final DateTime startDate = DateTime(2026, 7, 1);
-  final DateTime endDate = DateTime(2026, 7, 31);
+  final DateTime startDate = DateTime(2026, 9, 16);
+  final DateTime endDate = DateTime(2026, 9, 17);
 
   // Print markdown table header
   print('| Date | AlosHashachar | EarliestTefillin | NetzHachamah | LatestShema | LatestTefillah | Chatzos | MinchahGedolah | MinchahKetanah | PlagHaminchah | Shkiah | Tzeis | ChatzosNight | ShaahZmanit |');
@@ -60,14 +60,14 @@ void main() {
     // Compute all zmanim
     final alosHashachar = calendar.getAlosBaalHatanya();
     final earliestTefillin = calendar.getSunriseOffsetByDegrees(90 + 10.2);
-    final netzHachamah = netzAmiti;
+    final netzHachamah = calendar.getSeaLevelSunrise();
     final latestShema = calendar.getSofZmanShmaBaalHatanya();
     final latestTefillah = calendar.getSofZmanTfilaBaalHatanya();
     final chatzos = addTemporalHours(netzAmiti, 6);
     final minchahGedolah = calendar.getMinchaGedolaBaalHatanya();
     final minchahKetanah = calendar.getMinchaKetanaBaalHatanya();
     final plagHaminchah = calendar.getPlagHaminchaBaalHatanya();
-    final shkiah = shkiahAmitis;
+    final shkiah = calendar.getSeaLevelSunset();
     final tzeis = calendar.getTzaisBaalHatanya();
     final chatzosNight = _midnightBetween(shkiahAmitis, netzAmitiTomorrow);
 
