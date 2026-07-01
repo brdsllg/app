@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_filex/open_filex.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -100,10 +103,10 @@ class UpdateService {
   }
 
   /// Runs the update check and, if an update is available, shows a dialog
-  /// with a "Download" button that opens the download URL in the device browser.
+  /// with a "Download" button that downloads the APK and opens it for install.
   static Future<void> runUpdateFlow(BuildContext context) async {
     final remote = await checkForUpdate();
-    if (remote == null) return; // up-to-date or error
+    if (remote == null) return;
 
     if (!context.mounted) return;
 
@@ -145,15 +148,68 @@ class UpdateService {
 
     if (shouldDownload != true) return;
 
-    // Open the download URL in the browser
-    final uri = Uri.tryParse(remote.downloadUrl);
-    if (uri != null && await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open download link.')),
-        );
+    await _downloadAndInstall(context, remote);
+  }
+
+  static Future<void> _downloadAndInstall(
+    BuildContext context,
+    RemoteVersionInfo remote, {
+    bool isRetry = false,
+  }) async {
+    if (!context.mounted) return;
+
+    // Show downloading message
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => const AlertDialog(
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 16),
+            Text('Downloading update...'),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      final response = await http.get(Uri.parse(remote.downloadUrl));
+      if (response.statusCode != 200) throw Exception('Download failed');
+
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/update.apk');
+      await file.writeAsBytes(response.bodyBytes);
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop(); // close downloading dialog
+
+      await OpenFilex.open(file.path);
+    } catch (_) {
+      if (!context.mounted) return;
+      Navigator.of(context).pop(); // close downloading dialog
+
+      // Show error with retry/cancel
+      final retry = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Download Failed'),
+          content: const Text('Could not download the update. Please check your internet connection.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+
+      if (retry == true && context.mounted) {
+        await _downloadAndInstall(context, remote);
       }
     }
   }
