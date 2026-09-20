@@ -191,17 +191,6 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
         // BAAL_HATANYA_NATIVE: 6° below horizon
         ' Nightfall (Tzeit Hakochavim)': calendar.getTzaisBaalHatanya(),
 
-        // BAAL_HATANYA_NATIVE: 8.5° lechumra
-        ' Nightfall 8.5° (Tzeit L\'Chumra)': calendar
-            .getTzaisGeonim8Point5Degrees(),
-
-        // BAAL_HATANYA_NATIVE: 4 shaos - Erev Pesach relevant
-        ' Sof Zman Achilas Chametz': calendar
-            .getSofZmanAchilasChametzBaalHatanya(),
-
-        // BAAL_HATANYA_NATIVE: 5 shaos - Erev Pesach relevant
-        ' Sof Zman Biur Chametz': calendar.getSofZmanBiurChametzBaalHatanya(),
-
         // Midnight: midpoint between tonight's shkiah amitis and tomorrow's netz amiti
         ' Midnight (Chatzot HaLailah)': _midnightBetween(
           shkiahAmitis,
