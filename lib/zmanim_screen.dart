@@ -36,10 +36,12 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
 
     try {
       // Check if location services are enabled
-      final isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+      final isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
       if (!isLocationServiceEnabled) {
         setState(() {
-          _error = 'Location services are disabled. Please enable them in your device settings.';
+          _error =
+              'Location services are disabled. Please enable them in your device settings.';
           _isLoading = false;
         });
         return;
@@ -51,7 +53,8 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           setState(() {
-            _error = 'Location permission denied. Please grant location access to use this app.';
+            _error =
+                'Location permission denied. Please grant location access to use this app.';
             _isLoading = false;
           });
           return;
@@ -60,7 +63,8 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
 
       if (permission == LocationPermission.deniedForever) {
         setState(() {
-          _error = 'Location permission permanently denied. Please enable it in app settings.';
+          _error =
+              'Location permission permanently denied. Please enable it in app settings.';
           _isLoading = false;
         });
         return;
@@ -113,7 +117,7 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
 
       // Create GeoLocation for current position.
       // kosher_dart 2.0.20 GeoLocation.setLocation takes:
-      // locationName, latitude, longitude, dateTime, 
+      // locationName, latitude, longitude, dateTime,
       final location = GeoLocation.setLocation(
         _locationName ?? 'Current Location',
         lat!, // latitude (negative = South)
@@ -145,82 +149,75 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
       // Helper function: add temporal hours to a DateTime
       DateTime? addTemporalHours(DateTime? start, double hours) {
         if (start == null || shaahZmanisMs <= 0) return null;
-        return start.add(Duration(milliseconds: (shaahZmanisMs * hours).toInt()));
+        return start.add(
+          Duration(milliseconds: (shaahZmanisMs * hours).toInt()),
+        );
       }
-
-      final sunrise = calendar.getSunrise();
-      final sunset = calendar.getSunset();
 
       // BAAL_HATANYA_NATIVE: All zmanim use native Baal Hatanya methods
       final zmanim = <String, Object?>{
         // BAAL_HATANYA_NATIVE: 16.9° - 72 min before netz amiti
-        ' Dawn (Alot Hashachar)':
-            calendar.getAlosBaalHatanya(),
+        ' Dawn (Alot Hashachar)': calendar.getAlosBaalHatanya(),
 
-        ' Earliest Tallit and Tefillin (Misheyakir)':
-            calendar.getSunriseOffsetByDegrees(90 + 10.2),
+        ' Earliest Tallit and Tefillin (Misheyakir)': calendar
+            .getSunriseOffsetByDegrees(90 + 10.2),
 
-        ' Sunrise (Hanetz Hachamah)':
-            calendar.getSeaLevelSunrise(),
+        ' Sunrise (Hanetz Hachamah)': calendar.getSeaLevelSunrise(),
 
         // BAAL_HATANYA_NATIVE: 3 shaos zmaniyos after netz amiti
-        ' Latest Shema (Sof Zman Krias Shema)':
-            calendar.getSofZmanShmaBaalHatanya(),
+        ' Latest Shema (Sof Zman Krias Shema)': calendar
+            .getSofZmanShmaBaalHatanya(),
 
         // BAAL_HATANYA_NATIVE: 4 shaos zmaniyos after netz amiti
-        ' Latest Shacharit (Sof Zman Shachris)':
-            calendar.getSofZmanTfilaBaalHatanya(),
+        ' Latest Shacharit (Sof Zman Shachris)': calendar
+            .getSofZmanTfilaBaalHatanya(),
 
-        ' Midday (Chatzot Hayom)':
-            addTemporalHours(netzAmiti, 6),
+        ' Midday (Chatzot Hayom)': addTemporalHours(netzAmiti, 6),
 
         // BAAL_HATANYA_NATIVE: 6.5 shaos zmaniyos after netz amiti
-        ' Earliest Mincha (Mincha Gedolah)':
-            calendar.getMinchaGedolaBaalHatanya(),
+        ' Earliest Mincha (Mincha Gedolah)': calendar
+            .getMinchaGedolaBaalHatanya(),
 
         // BAAL_HATANYA_NATIVE: 9.5 shaos zmaniyos after netz amiti
-        ' Mincha Ketanah ("Small Mincha")':
-            calendar.getMinchaKetanaBaalHatanya(),
+        ' Mincha Ketanah ("Small Mincha")': calendar
+            .getMinchaKetanaBaalHatanya(),
 
         // BAAL_HATANYA_NATIVE: 10.75 shaos zmaniyos after netz amiti
-        ' Plag Hamincha ("Half of Mincha")':
-            calendar.getPlagHaminchaBaalHatanya(),
+        ' Plag Hamincha ("Half of Mincha")': calendar
+            .getPlagHaminchaBaalHatanya(),
 
-        ' Sunset (Shkiah)':
-            calendar.getSeaLevelSunset(),
+        ' Sunset (Shkiah)': calendar.getSeaLevelSunset(),
 
         // BAAL_HATANYA_NATIVE: 6° below horizon
-        ' Nightfall (Tzeit Hakochavim)':
-            calendar.getTzaisBaalHatanya(),
+        ' Nightfall (Tzeit Hakochavim)': calendar.getTzaisBaalHatanya(),
 
         // BAAL_HATANYA_NATIVE: 8.5° lechumra
-        ' Nightfall 8.5° (Tzeit L\'Chumra)':
-            calendar.getTzaisGeonim8Point5Degrees(),
+        ' Nightfall 8.5° (Tzeit L\'Chumra)': calendar
+            .getTzaisGeonim8Point5Degrees(),
 
         // BAAL_HATANYA_NATIVE: 4 shaos - Erev Pesach relevant
-        ' Sof Zman Achilas Chametz':
-            calendar.getSofZmanAchilasChametzBaalHatanya(),
+        ' Sof Zman Achilas Chametz': calendar
+            .getSofZmanAchilasChametzBaalHatanya(),
 
         // BAAL_HATANYA_NATIVE: 5 shaos - Erev Pesach relevant
-        ' Sof Zman Biur Chametz':
-            calendar.getSofZmanBiurChametzBaalHatanya(),
+        ' Sof Zman Biur Chametz': calendar.getSofZmanBiurChametzBaalHatanya(),
 
         // Midnight: midpoint between tonight's shkiah amitis and tomorrow's netz amiti
-        ' Midnight (Chatzot HaLailah)':
-            _midnightBetween(shkiahAmitis, netzAmitiTomorrow),
+        ' Midnight (Chatzot HaLailah)': _midnightBetween(
+          shkiahAmitis,
+          netzAmitiTomorrow,
+        ),
       };
 
       // Format shaah zmanis as minutes and seconds string
       final shaahMinutes = (shaahZmanisMs / 60000).floor();
       final shaahSeconds = ((shaahZmanisMs % 60000) / 1000).round();
 
-
-
-
       setState(() {
         _zmanim.addAll(zmanim);
         // BAAL_HATANYA_NATIVE: Shaah zmanis now from getShaahZmanisBaalHatanya()
-        _shaahZmanisDisplay = ' Shaah Zmanis : $shaahMinutes min $shaahSeconds sec';
+        _shaahZmanisDisplay =
+            ' Shaah Zmanis : $shaahMinutes min $shaahSeconds sec';
         _isLoading = false;
       });
     } catch (e) {
@@ -382,13 +379,16 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
               Expanded(
                 flex: 3,
                 child: MediaQuery(
-                  data: MediaQuery.of(context).copyWith(
-                    textScaler: TextScaler.noScaling,
-                  ),
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.noScaling),
                   child: const Center(
                     child: Text(
                       'Zmanim',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -397,9 +397,9 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
               Expanded(
                 flex: 2,
                 child: MediaQuery(
-                  data: MediaQuery.of(context).copyWith(
-                    textScaler: TextScaler.noScaling,
-                  ),
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.noScaling),
                   child: TextButton(
                     onPressed: _goToTodayOrReload,
                     style: TextButton.styleFrom(
@@ -407,10 +407,7 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
                       padding: EdgeInsets.zero,
                       minimumSize: Size.zero,
                     ),
-                    child: const Text(
-                      'Today',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    child: const Text('Today', style: TextStyle(fontSize: 16)),
                   ),
                 ),
               ),
@@ -500,21 +497,39 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
     final selected = _selectedDate;
 
     final monthsOfYear = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
     final monthName = monthsOfYear[selected.month - 1];
     final dateFormatted = '${selected.day} $monthName';
 
     // Format Hebrew date: e.g. "Monday, 7 Tamuz"
     final daysOfWeek = [
-      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
     ];
     final dayOfWeek = daysOfWeek[selected.weekday % 7];
     final jewishDate = JewishDate.fromDateTime(selected);
     final hebrewFormatter = HebrewDateFormatter();
-    final jewishMonthName = hebrewFormatter.transliteratedMonths[jewishDate.getJewishMonth() - 1];
-    final mainHeaderLine = '$dayOfWeek, ${jewishDate.getJewishDayOfMonth()} $jewishMonthName';
+    final jewishMonthName =
+        hebrewFormatter.transliteratedMonths[jewishDate.getJewishMonth() - 1];
+    final mainHeaderLine =
+        '$dayOfWeek, ${jewishDate.getJewishDayOfMonth()} $jewishMonthName';
     final items = _zmanim.entries.toList();
 
     // Header widget to be placed as the first item in the list
@@ -526,27 +541,25 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
         children: [
           Text(
             mainHeaderLine,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
-          Text(
-            dateFormatted,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text(dateFormatted, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),
           Text(
             _locationName ?? 'Current Location',
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
     );
 
-    final totalZmanimItems = items.length + (_shaahZmanisDisplay != null ? 1 : 0);
+    final totalZmanimItems =
+        items.length + (_shaahZmanisDisplay != null ? 1 : 0);
     final totalItems = 1 + totalZmanimItems; // +1 for the header
 
     return Column(
@@ -573,10 +586,7 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
               final entry = items[zmanIndex];
               final value = entry.value;
               if (value is DateTime) {
-                return _ZmanimTile(
-                  label: entry.key,
-                  time: value,
-                );
+                return _ZmanimTile(label: entry.key, time: value);
               }
               return const SizedBox.shrink();
             },
@@ -598,10 +608,7 @@ class _ZmanimTile extends StatelessWidget {
   final String label;
   final DateTime? time;
 
-  const _ZmanimTile({
-    required this.label,
-    required this.time,
-  });
+  const _ZmanimTile({required this.label, required this.time});
 
   String _formatTime(DateTime? dateTime) {
     if (dateTime == null) return '--:--';
@@ -663,10 +670,7 @@ class _DurationTile extends StatelessWidget {
     return ListTile(
       title: Text(
         label,
-        style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-        ),
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
       ),
     );
   }

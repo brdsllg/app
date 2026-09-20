@@ -7,7 +7,6 @@ import 'package:open_filex/open_filex.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// Represents the remote version info fetched from GitHub.
 class RemoteVersionInfo {
@@ -70,9 +69,9 @@ class UpdateService {
       }
 
       // --- fetch remote version.json ---------------------------------------
-      final response = await http.get(Uri.parse(_versionUrl)).timeout(
-        const Duration(seconds: 10),
-      );
+      final response = await http
+          .get(Uri.parse(_versionUrl))
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 200) return null;
 
@@ -147,15 +146,15 @@ class UpdateService {
     );
 
     if (shouldDownload != true) return;
+    if (!context.mounted) return;
 
     await _downloadAndInstall(context, remote);
   }
 
   static Future<void> _downloadAndInstall(
     BuildContext context,
-    RemoteVersionInfo remote, {
-    bool isRetry = false,
-  }) async {
+    RemoteVersionInfo remote,
+  ) async {
     if (!context.mounted) return;
 
     // Show downloading message
@@ -194,7 +193,9 @@ class UpdateService {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Download Failed'),
-          content: const Text('Could not download the update. Please check your internet connection.'),
+          content: const Text(
+            'Could not download the update. Please check your internet connection.',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),

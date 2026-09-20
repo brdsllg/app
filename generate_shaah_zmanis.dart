@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:kosher_dart/kosher_dart.dart';
 
 void main() {
@@ -11,8 +13,12 @@ void main() {
   final DateTime endDate = DateTime(2026, 9, 29);
 
   // Print markdown table header
-  print('| Date | AlosHashachar | EarliestTefillin | NetzHachamah | LatestShema | LatestTefillah | Chatzos | MinchahGedolah | MinchahKetanah | PlagHaminchah | Shkiah | Tzeis | ChatzosNight | ShaahZmanit |');
-  print('|------|--------------|-----------------|-------------|------------|--------------|--------|---------------|--------------|-------------|------|------|------------|-----------|');
+  stdout.writeln(
+    '| Date | AlosHashachar | EarliestTefillin | NetzHachamah | LatestShema | LatestTefillah | Chatzos | MinchahGedolah | MinchahKetanah | PlagHaminchah | Shkiah | Tzeis | ChatzosNight | ShaahZmanit |',
+  );
+  stdout.writeln(
+    '|------|--------------|-----------------|-------------|------------|--------------|--------|---------------|--------------|-------------|------|------|------------|-----------|',
+  );
 
   // Iterate through each day
   DateTime currentDate = startDate;
@@ -72,8 +78,12 @@ void main() {
     final chatzosNight = _midnightBetween(shkiahAmitis, netzAmitiTomorrow);
 
     // Shaah zmanis as minutes:seconds
-    final shaahMinutes = shaahZmanisMs > 0 ? (shaahZmanisMs / 60000).floor() : 0;
-    final shaahSeconds = shaahZmanisMs > 0 ? ((shaahZmanisMs % 60000) / 1000).round() : 0;
+    final shaahMinutes = shaahZmanisMs > 0
+        ? (shaahZmanisMs / 60000).floor()
+        : 0;
+    final shaahSeconds = shaahZmanisMs > 0
+        ? ((shaahZmanisMs % 60000) / 1000).round()
+        : 0;
     final shaahDisplay = shaahZmanisMs > 0
         ? '${shaahMinutes.toString().padLeft(2, '0')} min ${shaahSeconds.toString().padLeft(2, '0')} sec'
         : '--:--';
@@ -85,16 +95,23 @@ void main() {
       final minute = time.minute.toString().padLeft(2, '0');
       final second = time.second.toString().padLeft(2, '0');
       final period = hour >= 12 ? 'PM' : 'AM';
-      final displayHour = hour == 0 ? 12 : hour > 12 ? hour - 12 : hour;
+      final displayHour = hour == 0
+          ? 12
+          : hour > 12
+          ? hour - 12
+          : hour;
       final hourStr = displayHour.toString().padLeft(2, '0');
       return '$hourStr:$minute:$second $period';
     }
 
     // Format date
-    final String dateStr = '${currentDate.month}/${currentDate.day}/${currentDate.year}';
+    final String dateStr =
+        '${currentDate.month}/${currentDate.day}/${currentDate.year}';
 
     // Print table row
-    print('| $dateStr | ${formatTime(alosHashachar)} | ${formatTime(earliestTefillin)} | ${formatTime(netzHachamah)} | ${formatTime(latestShema)} | ${formatTime(latestTefillah)} | ${formatTime(chatzos)} | ${formatTime(minchahGedolah)} | ${formatTime(minchahKetanah)} | ${formatTime(plagHaminchah)} | ${formatTime(shkiah)} | ${formatTime(tzeis)} | ${formatTime(chatzosNight)} | $shaahDisplay |');
+    stdout.writeln(
+      '| $dateStr | ${formatTime(alosHashachar)} | ${formatTime(earliestTefillin)} | ${formatTime(netzHachamah)} | ${formatTime(latestShema)} | ${formatTime(latestTefillah)} | ${formatTime(chatzos)} | ${formatTime(minchahGedolah)} | ${formatTime(minchahKetanah)} | ${formatTime(plagHaminchah)} | ${formatTime(shkiah)} | ${formatTime(tzeis)} | ${formatTime(chatzosNight)} | $shaahDisplay |',
+    );
 
     // Move to next day
     currentDate = currentDate.add(const Duration(days: 1));
