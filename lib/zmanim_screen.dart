@@ -154,6 +154,15 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
         );
       }
 
+      // On Erev Shabbos, a regular meal should begin before nine Baal HaTanya
+      // shaos zmaniyos after netz amiti. The calendar's GeoLocation is set to
+      // zero elevation above, so this zman deliberately ignores elevation.
+      final regularMealBefore = calculateRegularMealBefore(
+        selectedDate: _selectedDate,
+        netzAmiti: netzAmiti,
+        shaahZmanisMs: shaahZmanisMs,
+      );
+
       // BAAL_HATANYA_NATIVE: All zmanim use native Baal Hatanya methods
       final zmanim = <String, Object?>{
         // BAAL_HATANYA_NATIVE: 16.9° - 72 min before netz amiti
@@ -173,6 +182,8 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
             .getSofZmanTfilaBaalHatanya(),
 
         ' Midday (Chatzot Hayom)': addTemporalHours(netzAmiti, 6),
+
+        ' Regular meal before': ?regularMealBefore,
 
         // BAAL_HATANYA_NATIVE: 6.5 shaos zmaniyos after netz amiti
         ' Earliest Mincha (Mincha Gedolah)': calendar
@@ -584,6 +595,23 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
       ],
     );
   }
+}
+
+/// Returns the Erev Shabbos regular-meal cutoff: nine Baal HaTanya
+/// proportional hours after netz amiti. It is intentionally absent on every
+/// other day.
+DateTime? calculateRegularMealBefore({
+  required DateTime selectedDate,
+  required DateTime? netzAmiti,
+  required double shaahZmanisMs,
+}) {
+  if (selectedDate.weekday != DateTime.friday ||
+      netzAmiti == null ||
+      shaahZmanisMs <= 0) {
+    return null;
+  }
+
+  return netzAmiti.add(Duration(milliseconds: (shaahZmanisMs * 9).toInt()));
 }
 
 /// Calculates the midpoint between two DateTimes.
