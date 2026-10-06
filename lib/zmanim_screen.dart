@@ -163,6 +163,17 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
         shaahZmanisMs: shaahZmanisMs,
       );
 
+      // The displayed shkiah (Sunset tile) doubles as the candle-lighting
+      // baseline on Erev Shabbos.
+      final shkiah = calendar.getSeaLevelSunset();
+
+      // Candle lighting only exists on Fridays: displayed shkiah minus 18
+      // minutes. Absent on every other day.
+      final candleLighting = calculateCandleLighting(
+        selectedDate: _selectedDate,
+        shkiah: shkiah,
+      );
+
       // BAAL_HATANYA_NATIVE: All zmanim use native Baal Hatanya methods
       final zmanim = <String, Object?>{
         // BAAL_HATANYA_NATIVE: 16.9° - 72 min before netz amiti
@@ -197,7 +208,9 @@ class _ZmanimScreenState extends State<ZmanimScreen> {
         ' Plag Hamincha ("Half of Mincha")': calendar
             .getPlagHaminchaBaalHatanya(),
 
-        ' Sunset (Shkiah)': calendar.getSeaLevelSunset(),
+        ' Candle Lighting': ?candleLighting,
+
+        ' Sunset (Shkiah)': shkiah,
 
         // BAAL_HATANYA_NATIVE: 6° below horizon
         ' Nightfall (Tzeit Hakochavim)': calendar.getTzaisBaalHatanya(),
@@ -612,6 +625,20 @@ DateTime? calculateRegularMealBefore({
   }
 
   return netzAmiti.add(Duration(milliseconds: (shaahZmanisMs * 9).toInt()));
+}
+
+/// Returns the Friday-only candle lighting time: the displayed shkiah
+/// (sea-level sunset) minus 18 minutes. It is intentionally absent on every
+/// other day.
+DateTime? calculateCandleLighting({
+  required DateTime selectedDate,
+  required DateTime? shkiah,
+}) {
+  if (selectedDate.weekday != DateTime.friday || shkiah == null) {
+    return null;
+  }
+
+  return shkiah.subtract(const Duration(minutes: 18));
 }
 
 /// Calculates the midpoint between two DateTimes.
